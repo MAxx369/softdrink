@@ -1,0 +1,419 @@
+{% extends "layout.html" %}
+{% block title %}Our Products | Soft Drinks{% endblock %}
+{% block content %}
+<style>
+  .products-hero {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    padding: 100px 0;
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .products-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: drift 30s linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: rotate(0deg) translateX(0px); }
+    100% { transform: rotate(360deg) translateX(50px); }
+  }
+
+  .products-hero h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: slideInDown 1s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .products-hero p {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    animation: slideInUp 1s ease 0.3s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .products-section {
+    padding: 100px 0;
+    background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+  }
+
+  .products-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .section-title {
+    font-size: 2.8rem;
+    color: #333;
+    margin-bottom: 15px;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    border-radius: 2px;
+  }
+
+  .section-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 25px;
+    padding: 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    display: block;
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    z-index: 1;
+  }
+
+  .product-card:hover::before {
+    transform: translateX(100%);
+  }
+
+  .product-card:hover {
+    transform: translateY(-20px) scale(1.05);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card-header {
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .coffee-header {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+  }
+
+  .juice-header {
+    background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+  }
+
+  .cocktail-header {
+    background: linear-gradient(135deg, #9b59b6 0%, #e74c3c 100%);
+  }
+
+  .alldrinks-header {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  }
+
+  .card-body {
+    padding: 30px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .product-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .product-description {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .product-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 25px;
+  }
+
+  .product-features li {
+    color: #555;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .product-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #27ae60;
+    font-weight: bold;
+  }
+
+  .explore-button {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+  }
+
+  .explore-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .product-card {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .product-card:nth-child(1) { animation-delay: 0.1s; }
+  .product-card:nth-child(2) { animation-delay: 0.2s; }
+  .product-card:nth-child(3) { animation-delay: 0.3s; }
+  .product-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .floating-elements::before,
+  .floating-elements::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-elements::before {
+    top: 20%;
+    left: 20%;
+    animation-delay: -2s;
+  }
+
+  .floating-elements::after {
+    top: 60%;
+    right: 20%;
+    animation-delay: -4s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @media (max-width: 768px) {
+    .products-hero h1 {
+      font-size: 2.8rem;
+    }
+    
+    .products-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .product-card {
+      margin: 0 10px;
+    }
+    
+    .card-header {
+      height: 150px;
+      font-size: 3.5rem;
+    }
+  }
+</style>
+
+<div class="products-hero">
+  <div class="floating-elements"></div>
+  <div class="container">
+    <h1>Our Premium Drinks Collection</h1>
+    <p>Discover exceptional beverages crafted with passion and quality</p>
+  </div>
+</div>
+
+<section class="products-section">
+  <div class="products-container">
+    <div class="section-header">
+      <h2 class="section-title">Explore Our Categories</h2>
+      <p class="section-subtitle">From energizing coffee to refreshing juices, we have the perfect drink for every taste and occasion</p>
+    </div>
+
+    <div class="products-grid">
+      
+      <a href="/coffee" class="product-card">
+        <div class="card-header coffee-header">
+          <span>☕</span>
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">Premium Coffee</h3>
+          <p class="product-description">Rich, aromatic coffee blends sourced from the finest coffee beans around the world</p>
+          <ul class="product-features">
+            <li>Freshly roasted beans</li>
+            <li>Multiple brewing methods</li>
+            <li>Organic options available</li>
+            <li>Perfect for any time of day</li>
+          </ul>
+          <div class="explore-button">Explore Coffee →</div>
+        </div>
+      </a>
+
+      <a href="/freshjuise" class="product-card">
+        <div class="card-header juice-header">
+          <span>🍊</span>
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">Fresh Juices</h3>
+          <p class="product-description">Pure, natural fruit juices packed with vitamins and bursting with fresh flavors</p>
+          <ul class="product-features">
+            <li>100% natural ingredients</li>
+            <li>No artificial preservatives</li>
+            <li>Rich in vitamins & minerals</li>
+            <li>Freshly squeezed daily</li>
+          </ul>
+          <div class="explore-button">Explore Juices →</div>
+        </div>
+      </a>
+
+      <a href="/cocktails" class="product-card">
+        <div class="card-header cocktail-header">
+          <span>🍸</span>
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">Signature Cocktails</h3>
+          <p class="product-description">Expertly crafted cocktails perfect for celebrations and special moments</p>
+          <ul class="product-features">
+            <li>Premium spirits & ingredients</li>
+            <li>Creative flavor combinations</li>
+            <li>Perfect for parties</li>
+            <li>Professional mixology</li>
+          </ul>
+          <div class="explore-button">Explore Cocktails →</div>
+        </div>
+      </a>
+
+      <a href="/alldrinks" class="product-card">
+        <div class="card-header alldrinks-header">
+          <span>🧃</span>
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">Complete Collection</h3>
+          <p class="product-description">Browse our entire selection of beverages in one convenient location</p>
+          <ul class="product-features">
+            <li>Full product catalog</li>
+            <li>Easy filtering & search</li>
+            <li>Compare different options</li>
+            <li>Find your perfect drink</li>
+          </ul>
+          <div class="explore-button">View All Drinks →</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

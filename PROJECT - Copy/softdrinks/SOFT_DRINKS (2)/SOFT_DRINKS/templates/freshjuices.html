@@ -1,0 +1,888 @@
+{% extends "layout.html" %}
+{% block title %}FreshJuices Menu{% endblock %}
+
+{% block content %}
+<section class="juice-section">
+  <!-- Hero Header -->
+  <div class="juice-hero">
+    <div class="hero-content">
+      <h1 class="juice-title">
+        <span class="juice-icon">🍊</span>
+        Fresh Juices
+        <span class="juice-icon">🥤</span>
+      </h1>
+      <p class="juice-subtitle">Pure, natural, vitamin-packed goodness</p>
+    </div>
+    <div class="hero-decoration">
+      <div class="fruit-slice slice-1">🍊</div>
+      <div class="fruit-slice slice-2">🍎</div>
+      <div class="fruit-slice slice-3">🍋</div>
+      <div class="fruit-slice slice-4">🥝</div>
+      <div class="juice-splash splash-1"></div>
+      <div class="juice-splash splash-2"></div>
+      <div class="juice-splash splash-3"></div>
+    </div>
+  </div>
+
+  <!-- Filter/Category Section -->
+  <div class="juice-filters">
+    <button class="filter-btn active" data-filter="all">All Juices</button>
+    <button class="filter-btn" data-filter="citrus">Citrus</button>
+    <button class="filter-btn" data-filter="tropical">Tropical</button>
+    <button class="filter-btn" data-filter="green">Green Juice</button>
+    <button class="filter-btn" data-filter="mixed">Mixed</button>
+  </div>
+
+  <!-- Juices Grid -->
+  <div class="juice-grid">
+    {% for item in freshjuices %}
+    <div class="juice-card" data-category="{{ item.category|default('citrus') }}">
+      <div class="card-image-container">
+        <img src="{{ url_for('static', filename='images/' ~ item.image) }}" 
+             alt="{{ item.name }}" 
+             class="juice-image"
+             loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="view-details">View Details</span>
+          </div>
+        </div>
+        <div class="freshness-badge">
+          <span class="badge-icon">🌿</span>
+          <span class="badge-text">Fresh</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="juice-header">
+          <h3 class="juice-name">{{ item.name }}</h3>
+          <div class="juice-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-text">4.7</span>
+          </div>
+        </div>
+        
+        <p class="juice-description">{{ item.description }}</p>
+        
+        <div class="nutrition-info">
+          <div class="nutrition-item">
+            <span class="nutrition-icon">🍎</span>
+            <div class="nutrition-details">
+              <span class="nutrition-label">Vitamin C</span>
+              <span class="nutrition-value">{{ item.vitamin_c|default('120mg') }}</span>
+            </div>
+          </div>
+          <div class="nutrition-item">
+            <span class="nutrition-icon">⚡</span>
+            <div class="nutrition-details">
+              <span class="nutrition-label">Calories</span>
+              <span class="nutrition-value">{{ item.calories|default('85 kcal') }}</span>
+            </div>
+          </div>
+          <div class="nutrition-item">
+            <span class="nutrition-icon">💧</span>
+            <div class="nutrition-details">
+              <span class="nutrition-label">Hydration</span>
+              <span class="nutrition-value">{{ item.hydration|default('High') }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="juice-options">
+          <div class="size-selection">
+            <span class="option-label">Size:</span>
+            <div class="size-buttons">
+              <button class="size-btn" data-size="small" data-ml="250">250ml</button>
+              <button class="size-btn active" data-size="medium" data-ml="350">350ml</button>
+              <button class="size-btn" data-size="large" data-ml="500">500ml</button>
+            </div>
+          </div>
+          
+          <div class="ice-selection">
+            <span class="option-label">Ice:</span>
+            <div class="ice-buttons">
+              <button class="ice-btn" data-ice="no">No Ice</button>
+              <button class="ice-btn active" data-ice="normal">Normal</button>
+              <button class="ice-btn" data-ice="extra">Extra</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="health-benefits">
+          <div class="benefits-header">
+            <span class="benefits-icon">💪</span>
+            <span class="benefits-title">Health Benefits</span>
+          </div>
+          <div class="benefits-tags">
+            <span class="benefit-tag">Antioxidants</span>
+            <span class="benefit-tag">Immunity</span>
+            <span class="benefit-tag">Energy</span>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <div class="price-container">
+            <span class="currency">₹</span>
+            <span class="price" data-base-price="{{ item.price }}">{{ item.price }}</span>
+          </div>
+          <button class="add-to-cart-btn">
+            <span class="btn-text">Add to Cart</span>
+            <span class="btn-icon">🛒</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Favorite button -->
+      <button class="favorite-btn" data-id="{{ item.id }}">
+        <span class="heart">♡</span>
+      </button>
+      
+      <!-- Organic badge -->
+      <div class="organic-badge">
+        <span class="organic-text">100% Organic</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty state (if no juices) -->
+  {% if not freshjuices %}
+  <div class="empty-state">
+    <div class="empty-icon">🍹</div>
+    <h3>No fresh juices available</h3>
+    <p>We're preparing fresh, delicious juices for you!</p>
+  </div>
+  {% endif %}
+</section>
+
+<!-- Add custom styles -->
+<style>
+.juice-section {
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 25%, #FFD23F 50%, #06FFA5 75%, #4ECDC4 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.juice-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 15% 85%, rgba(255, 107, 53, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 85% 15%, rgba(6, 255, 165, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 210, 63, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.juice-hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+.juice-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD23F, #06FFA5);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: juiceGradient 3s ease-in-out infinite;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.juice-icon {
+  display: inline-block;
+  animation: juiceBounce 2.5s ease-in-out infinite;
+  margin: 0 1rem;
+}
+
+.juice-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 300;
+  margin-bottom: 2rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.hero-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.fruit-slice {
+  position: absolute;
+  font-size: 2rem;
+  animation: fruitFloat 4s ease-in-out infinite;
+}
+
+.slice-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.slice-2 {
+  top: 70%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+.slice-3 {
+  top: 40%;
+  left: 75%;
+  animation-delay: 2s;
+}
+
+.slice-4 {
+  top: 80%;
+  left: 60%;
+  animation-delay: 3s;
+}
+
+.juice-splash {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+  animation: splashPulse 3s ease-in-out infinite;
+}
+
+.splash-1 {
+  top: 30%;
+  left: 20%;
+  animation-delay: 0.5s;
+}
+
+.splash-2 {
+  top: 60%;
+  right: 25%;
+  animation-delay: 1.5s;
+}
+
+.splash-3 {
+  top: 45%;
+  left: 80%;
+  animation-delay: 2.5s;
+}
+
+.juice-filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.juice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.juice-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  position: relative;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.juice-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+}
+
+.card-image-container {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.juice-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.juice-card:hover .juice-image {
+  transform: scale(1.1);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 107, 53, 0.8), rgba(6, 255, 165, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.juice-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  text-align: center;
+  color: white;
+}
+
+.view-details {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.freshness-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(6, 255, 165, 0.9);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.juice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.juice-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
+}
+
+.juice-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  color: #FFD700;
+  font-size: 0.9rem;
+}
+
+.rating-text {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.juice-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.nutrition-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(6, 255, 165, 0.1), rgba(255, 210, 63, 0.1));
+  border-radius: 10px;
+}
+
+.nutrition-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nutrition-icon {
+  font-size: 1.2rem;
+}
+
+.nutrition-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.nutrition-label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.nutrition-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.juice-options {
+  margin-bottom: 1.5rem;
+}
+
+.size-selection,
+.ice-selection {
+  margin-bottom: 1rem;
+}
+
+.option-label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+}
+
+.size-buttons,
+.ice-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.size-btn,
+.ice-btn {
+  padding: 0.4rem 0.8rem;
+  border: 2px solid #FF6B35;
+  background: transparent;
+  color: #FF6B35;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.size-btn:hover,
+.size-btn.active,
+.ice-btn:hover,
+.ice-btn.active {
+  background: #FF6B35;
+  color: white;
+  transform: scale(1.05);
+}
+
+.health-benefits {
+  background: rgba(255, 107, 53, 0.1);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.benefits-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.benefits-icon {
+  font-size: 1.1rem;
+}
+
+.benefits-title {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.benefits-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.benefit-tag {
+  background: rgba(6, 255, 165, 0.2);
+  color: #2c3e50;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.currency {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(45deg, #FF6B35, #F7931E);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-to-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.favorite-btn:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.heart {
+  font-size: 1.2rem;
+  color: #FF6B35;
+  transition: all 0.3s ease;
+}
+
+.favorite-btn.active .heart::before {
+  content: "♥";
+}
+
+.organic-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(34, 139, 34, 0.9);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Animations */
+@keyframes juiceGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes juiceBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(10deg); }
+}
+
+@keyframes fruitFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% { 
+    transform: translateY(-20px) rotate(5deg);
+  }
+  66% { 
+    transform: translateY(-10px) rotate(-5deg);
+  }
+}
+
+@keyframes splashPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% { 
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .juice-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .juice-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nutrition-info {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .card-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .add-to-cart-btn {
+    justify-content: center;
+  }
+  
+  .size-buttons,
+  .ice-buttons {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .juice-filters {
+    gap: 0.5rem;
+  }
+  
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .juice-grid {
+    padding: 0 0.5rem;
+  }
+  
+  .benefits-tags {
+    justify-content: center;
+  }
+}
+</style>
+
+<!-- Add JavaScript for interactivity -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Filter functionality
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const juiceCards = document.querySelectorAll('.juice-card');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const filter = this.dataset.filter;
+      
+      // Update active button
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Filter cards
+      juiceCards.forEach(card => {
+        const category = card.dataset.category || 'citrus';
+        if (filter === 'all' || category === filter) {
+          card.style.display = 'block';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 100);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+  
+  // Size selection functionality with price updates
+  const sizeButtons = document.querySelectorAll('.size-btn');
+  sizeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active from siblings
+      const siblings = this.parentElement.querySelectorAll('.size-btn');
+      siblings.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active to clicked button
+      this.classList.add('active');
+      
+      // Update price based on size
+      const card = this.closest('.juice-card');
+      const priceElement = card.querySelector('.price');
+      const basePrice = parseInt(priceElement.dataset.basePrice || priceElement.textContent);
+      const size = this.dataset.size;
+      
+      let multiplier = 1;
+      if (size === 'large') multiplier = 1.4;
+      else if (size === 'small') multiplier = 0.8;
+      
+      const newPrice = Math.round(basePrice * multiplier);
+      priceElement.textContent = newPrice;
+      
+      // Store base price if not already stored
+      if (!priceElement.dataset.basePrice) {
+        priceElement.dataset.basePrice = basePrice;
+      }
+    });
+  });
+  
+  // Ice selection functionality
+  const iceButtons = document.querySelectorAll('.ice-btn');
+  iceButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active from siblings
+      const siblings = this.parentElement.querySelectorAll('.ice-btn');
+      siblings.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active to clicked button
+      this.classList.add('active');
+    });
+  });
+  
+  // Favorite functionality
+  const favoriteButtons = document.querySelectorAll('.favorite-btn');
+  favoriteButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.classList.toggle('active');
+      
+      // Add a little animation
+      this.style.transform = 'scale(1.3)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 150);
+    });
+  });
+  
+  // Add to cart functionality
+  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      // Change button text temporarily
+      const originalText = this.querySelector('.btn-text').textContent;
+      this.querySelector('.btn-text').textContent = 'Added!';
+      this.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+      
+      setTimeout(() => {
+        this.querySelector('.btn-text').textContent = originalText;
+        this.style.background = 'linear-gradient(45deg, #FF6B35, #F7931E)';
+      }, 1500);
+    });
+  });
+  
+  // Animated fruit slices on scroll
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const fruitSlices = document.querySelectorAll('.fruit-slice');
+    
+    fruitSlices.forEach((slice, index) => {
+      const speed = 0.5 + (index * 0.1);
+      slice.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+    });
+  });
+});
+</script>
+{% endblock %}

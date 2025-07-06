@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Coffee Menu{% endblock %}
+{% block content %}
+<section class="page-section">
+  <h1>☕ Coffee Menu</h1>
+  <div class="product-grid">
+    {% for item in coffees %}
+    <div class="product-card">
+      <img src="{{ url_for('static', filename='images/' ~ item.image) }}" alt="{{ item.name }}">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <p><strong>₹{{ item.price }}</strong></p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
